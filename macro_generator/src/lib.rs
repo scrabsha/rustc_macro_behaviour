@@ -26,47 +26,18 @@ enum OrderingStyle {
 }
 
 impl OrderingStyle {
-    // Generates a struct definition based on the ordering style.
-    fn gen_struct(self) -> TokenStream2 {
+    // Generates a fake struct. Its name depends on the ordering style. The
+    // ordering "struct declaration - Cake trait implementation" is defined
+    // by the current variant.
+    fn expand_to_code(self) -> TokenStream2 {
         match self {
             OrderingStyle::StructBeforeTrait => quote! {
                 struct NewSchoolCake {};
-            },
-            OrderingStyle::TraitBeforeStruct => quote! {
-                struct OldSchoolCake {};
-            }
-        }
-    }
-
-    // Generates an implementation of the trait Cake, for the corresponding
-    // struct.
-    //
-    // Note that the `say_my_name` function is redefined, so that we can
-    // differenciate cases in which the trait is not expanded correctly.
-    fn gen_trait(self) -> TokenStream2 {
-        match self {
-            OrderingStyle::StructBeforeTrait => quote! {
                 impl exporter::Cake for NewSchoolCake {}
             },
             OrderingStyle::TraitBeforeStruct => quote! {
                 impl exporter::Cake for OldSchoolCake {}
-            }
-        }
-    }
-
-    // Concatenates the output of gen_struct and gen_trait correctly, depending
-    // on the ordering style.
-    fn expand_to_code(self) -> TokenStream2 {
-        let struct_definition = self.gen_struct();
-        let trait_implementation = self.gen_trait();
-        match self {
-            OrderingStyle::StructBeforeTrait => quote! {
-                #struct_definition
-                #trait_implementation
-            },
-            OrderingStyle::TraitBeforeStruct => quote! {
-                #trait_implementation
-                #struct_definition
+                struct OldSchoolCake {};
             }
         }
     }
