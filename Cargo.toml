@@ -1,0 +1,12 @@
+[workspace]
+members = [
+    # Where traits are defined
+    "core",
+    # Some proc_macros which generate a struct, and its implementation for a 
+    # trait defined in core.
+    "macro_generator",
+    # The crate used by the end-user, which exports the traits from core.
+    "exporter",
+    # The end-user code.
+    "user",
+]
